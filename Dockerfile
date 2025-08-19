@@ -1,20 +1,20 @@
-# استفاده از Ubuntu به عنوان base image
 FROM ubuntu:22.04
 
-# نصب ابزارهای مورد نیاز
+# نصب ابزارهای پایه
 RUN apt-get update && apt-get install -y \
-    ffmpeg \
     curl \
+    ffmpeg \
     git \
-    nodejs \
-    npm \
+    build-essential \
     && apt-get clean
+
+# نصب Node.js 18
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 # نصب n8n
 RUN npm install -g n8n
 
-# دایرکتوری کاری
 WORKDIR /data
 
-# اجرای n8n
 CMD ["n8n", "start", "--tunnel"]
