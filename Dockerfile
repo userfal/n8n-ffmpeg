@@ -1,20 +1,27 @@
-FROM ubuntu:22.04
+# استفاده از یک ایمیج رسمی Node.js سبک
+FROM node:20-bullseye-slim
 
-# نصب ابزارهای پایه
-RUN apt-get update && apt-get install -y \
-    curl \
-    ffmpeg \
-    git \
-    build-essential \
-    && apt-get clean
+# نصب ffmpeg و ابزارهای مورد نیاز
+RUN apt-get update && \
+    apt-get install -y ffmpeg git curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# نصب Node.js 18
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
-
-# نصب n8n
+# نصب n8n به صورت گلوبال
 RUN npm install -g n8n
 
-WORKDIR /data
+# دایرکتوری کاری داخل کانتینر
+WORKDIR /home/node
 
-CMD ["n8n", "start", "--tunnel"]
+# تنظیم متغیر محیطی n8n
+ENV N8N_PORT=5678
+ENV N8N_HOST=0.0.0.0
+ENV N8N_PROTOCOL=http
+ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
+
+# در صورت نیاز می‌توان workflow ها و credentials را اینجا کپی کرد
+# COPY ./workflows /home/node/.n8n/workflows
+# COPY ./credentials /home/node/.n8n/credentials
+
+# اجرای n8n هنگام شروع کانتینر
+CMD ["n8n", "start"]
