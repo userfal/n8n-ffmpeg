@@ -1,19 +1,20 @@
+# استفاده از Ubuntu به عنوان base image
 FROM ubuntu:22.04
 
-RUN apt-get update && apt-get install -y ffmpeg
+# نصب ابزارهای مورد نیاز
+RUN apt-get update && apt-get install -y \
+    ffmpeg \
+    curl \
+    git \
+    nodejs \
+    npm \
+    && apt-get clean
 
-# Base image n8n
-FROM n8nio/n8n:latest
+# نصب n8n
+RUN npm install -g n8n
 
-# نصب ffmpeg
-USER root
-RUN apt-get update && apt-get install -y ffmpeg
+# دایرکتوری کاری
+WORKDIR /data
 
-# برگشت به کاربر n8n
-USER node
-
-# پورتی که n8n استفاده می‌کنه
-EXPOSE 5678
-
-# دستور start n8n
-CMD ["n8n"]
+# اجرای n8n
+CMD ["n8n", "start", "--tunnel"]
