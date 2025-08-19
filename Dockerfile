@@ -1,3 +1,7 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y ffmpeg
+
 # Base image n8n
 FROM n8nio/n8n:latest
 
