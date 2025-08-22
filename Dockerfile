@@ -22,6 +22,10 @@ ENV N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=false
 # در صورت نیاز می‌توان workflow ها و credentials را اینجا کپی کرد
 # COPY ./workflows /home/node/.n8n/workflows
 # COPY ./credentials /home/node/.n8n/credentials
+# --- نصب Python و pip ---
+RUN apt-get update && apt-get install -y python3 python3-pip
 
+# --- نصب کتابخانه‌های مورد نیاز Python ---
+RUN pip3 install numpy opencv-python requests
 # اجرای n8n هنگام شروع کانتینر
 CMD ["n8n", "start"]
